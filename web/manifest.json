@@ -1,6 +1,6 @@
 {
-    "name": "voda_market",
-    "short_name": "voda_market",
+    "name": "voda",
+    "short_name": "voda",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
