@@ -36,8 +36,15 @@ class CatalogBottomSheet extends StatefulWidget {
 }
 
 class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
+  int initAmount = 1;
   int totalPrice = 0;
   bool isDrag = false;
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotalPrice(initAmount);
+  }
 
   CatalogBottomSheetTheme getTheme(bool isDark) {
     if (isDark) return CatalogBottomSheetTheme.dark();
@@ -130,7 +137,7 @@ class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
                                 SizedBox(width: 8),
                                 Expanded(child: _buildPriceLabel(theme, 2, widget.item.priceForTwo)),
                                 SizedBox(width: 8),
-                                Counter(onChange: calculateTotalPrice),
+                                Counter(onChange: calculateTotalPrice, init: initAmount),
                               ],
                             ),
                             SizedBox(height: 24),

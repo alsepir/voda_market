@@ -113,60 +113,58 @@ class _RadioButtonState extends State<RadioButton> with TickerProviderStateMixin
       _controller.reverse();
     }
 
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            if (widget.onChanged != null) widget.onChanged!(widget.groupValue);
-          },
-          child: Container(
-            padding: EdgeInsets.all(6),
-            child: Stack(
-              children: [
-                Container(
-                  height: 20,
-                  width: 20,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: theme.box),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                ScaleTransition(
-                  scale: _animation,
-                  child: Container(
-                    height: 16,
-                    width: 16,
-                    margin: EdgeInsets.all(2),
+    return GestureDetector(
+      onTap: () {
+        if (widget.onChanged != null) widget.onChanged!(widget.groupValue);
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(6),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 20,
                     decoration: BoxDecoration(
-                      color: theme.box,
+                      border: Border.all(color: theme.box),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (widget.label != null) ...[
-          SizedBox(width: 12),
-          Flexible(
-            child: GestureDetector(
-              onTap: () {
-                if (widget.onChanged != null) widget.onChanged!(widget.groupValue);
-              },
-              child: Text(
-                widget.label!,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: theme.label,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17,
-                ),
+                  ScaleTransition(
+                    scale: _animation,
+                    child: Container(
+                      height: 16,
+                      width: 16,
+                      margin: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: theme.box,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ]
-      ],
+            if (widget.label != null) ...[
+              SizedBox(width: 12),
+              Flexible(
+                child: Text(
+                  widget.label!,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: theme.label,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+            ]
+          ],
+        ),
+      ),
     );
   }
 }

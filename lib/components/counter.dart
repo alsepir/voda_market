@@ -20,16 +20,23 @@ class CounterTheme {
 }
 
 class Counter extends StatefulWidget {
-  Counter({Key? key, this.onChange}) : super(key: key);
+  Counter({Key? key, this.onChange, this.init}) : super(key: key);
 
   final Function(int)? onChange;
+  final int? init;
 
   @override
   _CounterState createState() => _CounterState();
 }
 
 class _CounterState extends State<Counter> {
-  int amount = 0;
+  late int amount;
+
+  @override
+  void initState() {
+    super.initState();
+    amount = widget.init != null ? widget.init! : 0;
+  }
 
   CounterTheme getTheme(bool isDark) {
     if (isDark) return CounterTheme.dark();
