@@ -36,6 +36,7 @@ class NotificationsScreen extends StatelessWidget {
         ],
       ),
       body: ListView.separated(
+        cacheExtent: 3000,
         itemCount: notifications.length,
         separatorBuilder: (BuildContext context, int index) =>
             Divider(height: 1, thickness: 0.5, indent: 24, endIndent: 24),

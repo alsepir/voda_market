@@ -36,6 +36,7 @@ class OrdersScreen extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
+        cacheExtent: 3000,
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           return OrderCard(

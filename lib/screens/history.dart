@@ -36,6 +36,7 @@ class HistoryScreen extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
+        cacheExtent: 3000,
         itemCount: history.length,
         itemBuilder: (BuildContext context, int index) {
           return HistoryCard(

@@ -66,6 +66,7 @@ class CatalogScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ListView.builder(
+                        cacheExtent: 1000,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return Row(
@@ -93,6 +94,7 @@ class CatalogScreen extends StatelessWidget {
                         ),
                       ),
                       child: ListView.builder(
+                        cacheExtent: 1000,
                         scrollDirection: Axis.horizontal,
                         itemCount: filters.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -114,6 +116,7 @@ class CatalogScreen extends StatelessWidget {
           ];
         },
         body: ListView.builder(
+          cacheExtent: 3000,
           itemCount: catalog.length,
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) return SizedBox(height: 16);

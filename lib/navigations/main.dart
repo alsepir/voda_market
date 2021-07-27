@@ -7,10 +7,12 @@ class MainNavigator extends StatefulWidget {
     Key? key,
     required this.onNavigation,
     required this.navigatorKey,
+    required this.tabIndex,
   }) : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Function({bool withBottomBar, String? newRoute, String? prevRoute}) onNavigation;
+  final int tabIndex;
 
   @override
   _MainNavigatorState createState() => _MainNavigatorState();
@@ -42,18 +44,11 @@ class _MainNavigatorState extends State<MainNavigator> {
           },
           pageBuilder: (context, animation, secondaryAnimation) {
             switch (settings.name) {
-              case '/catalog':
-                return CatalogScreen();
-              case '/history':
-                return HistoryScreen();
+              case '/':
+                return MainStackScreen(tabIndex: widget.tabIndex, tabCount: 4);
               case '/history/details':
                 int id = settings.arguments as int;
                 return HistoryDetailsScreen(historyId: id);
-              case '/profile':
-                return ProfileScreen();
-              case '/':
-              case '/order':
-                return OrdersScreen();
               case '/notifications':
                 return NotificationsScreen();
               default:

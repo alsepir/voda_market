@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:voda/components/icon.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  MainNavigationScreen({Key? key, required this.tab}) : super(key: key);
-
-  final String tab;
+  MainNavigationScreen({Key? key}) : super(key: key);
 
   @override
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
@@ -15,6 +13,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     with TickerProviderStateMixin<MainNavigationScreen> {
   late AnimationController _hide;
   int currentIndex = 0;
+  List<int> tabHistory = [];
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -35,7 +34,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     String firstFragment = routeFragments[1];
 
     switch (firstFragment) {
-      case '':
       case 'order':
         return 0;
       case 'catalog':
@@ -74,12 +72,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        navigatorKey.currentState?.maybePop();
+        bool? isPopped = await navigatorKey.currentState?.maybePop();
+
+        if (isPopped != null && !isPopped) {
+          List<int> _tabHistory = [...tabHistory];
+
+          if (tabHistory.isNotEmpty) _tabHistory.removeLast();
+          int lastIndex = _tabHistory.isEmpty ? 0 : _tabHistory.last;
+
+          if (currentIndex != lastIndex)
+            setState(() {
+              currentIndex = lastIndex;
+              tabHistory = _tabHistory;
+            });
+        }
+
         return false;
       },
       child: Scaffold(
         body: Stack(fit: StackFit.expand, children: [
-          MainNavigator(onNavigation: onNavigation, navigatorKey: navigatorKey),
+          MainNavigator(onNavigation: onNavigation, navigatorKey: navigatorKey, tabIndex: currentIndex),
           Align(
             alignment: Alignment(0.0, 0.96),
             child: Container(
@@ -110,25 +122,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       currentIndex: currentIndex,
       onTap: (index) {
         if (currentIndex == index) return;
-        String routeName = '/';
 
-        switch (index) {
-          case 0:
-            routeName = true ? '/order' : '/catalog';
-            break;
-          case 1:
-            routeName = true ? '/catalog' : '/history';
-            break;
-          case 2:
-            routeName = true ? '/history' : '/profile';
-            break;
-          case 3:
-            routeName = '/profile';
-            break;
-        }
+        List<int> _tabHistory = [...tabHistory].where((element) => element != index).toList();
+        _tabHistory.add(index);
+        if (_tabHistory.length > 4) _tabHistory.sublist(1);
 
-        setState(() => currentIndex = index);
-        navigatorKey.currentState?.pushNamed(routeName);
+        setState(() {
+          currentIndex = index;
+          tabHistory = _tabHistory;
+        });
       },
       items: [
         BottomNavigationBarItem(
