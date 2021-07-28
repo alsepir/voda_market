@@ -8,19 +8,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationsProvider()),
+        ChangeNotifierProvider(create: (context) => HistoryProvider()),
+        ChangeNotifierProvider(create: (context) => OrdersProvider()),
+        ChangeNotifierProvider(create: (context) => CatalogProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, theme, child) {
+          return MaterialApp(
+            onGenerateRoute: onGenerateRoute,
+            theme: themeLight,
+            darkTheme: themeDark,
+            themeMode: theme.mode,
+            initialRoute: '/auth',
+          );
+        },
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -70,11 +76,20 @@ class _MyHomePageState extends State<MyHomePage> {
           case '/main':
             return MainNavigationScreen();
           case '/auth':
-            return Center(child: Text('auth'));
+            return AuthScreen();
+          case '/auth/second':
+            final ScreenArguments<String> args = settings.arguments;
+            return AuthSecondScreen(phone: args.payload != null ? args.payload! : '');
           default:
             return Text('bad');
         }
       },
     );
   }
+}
+
+class ScreenArguments<T> {
+  ScreenArguments({this.payload});
+
+  final T? payload;
 }

@@ -8,12 +8,12 @@ enum ButtonType { primary, secondary, price, exit }
 
 class ButtonTheme {
   ButtonTheme(this.color, this.backgroundColor);
-  ButtonTheme.primary()
+  ButtonTheme.primary({bool disable = false})
       : this.color = AppColors.white,
-        this.backgroundColor = AppColors.brandBlue;
-  ButtonTheme.primaryDark()
+        this.backgroundColor = disable ? AppColors.brandBlue.withOpacity(0.2) : AppColors.brandBlue;
+  ButtonTheme.primaryDark({bool disable = false})
       : this.color = AppColors.white,
-        this.backgroundColor = AppColors.brandDarkBlue;
+        this.backgroundColor = disable ? AppColors.brandDarkBlue.withOpacity(0.2) : AppColors.brandDarkBlue;
   ButtonTheme.secondary()
       : color = AppColors.brandBlue,
         backgroundColor = AppColors.grey6;
@@ -66,8 +66,8 @@ class Button extends StatelessWidget {
   ButtonTheme getTheme(ButtonType type, bool isDark) {
     switch (type) {
       case ButtonType.primary:
-        if (isDark) return ButtonTheme.primaryDark();
-        return ButtonTheme.primary();
+        if (isDark) return ButtonTheme.primaryDark(disable: disable);
+        return ButtonTheme.primary(disable: disable);
       case ButtonType.secondary:
         if (isDark) return ButtonTheme.secondaryDark();
         return ButtonTheme.secondary();

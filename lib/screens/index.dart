@@ -9,3 +9,5 @@ export 'historyDetails.dart';
 export 'catalog.dart';
 export 'orders.dart';
 export 'main.stack.dart';
+export 'auth.dart';
+export 'authSecond.dart';
