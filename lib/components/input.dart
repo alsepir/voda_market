@@ -29,7 +29,6 @@ class Input extends StatefulWidget {
   Input({
     Key? key,
     this.placeholder = '',
-    this.value,
     this.onChanged,
     this.keyboardType,
     this.prefixText,
@@ -39,7 +38,6 @@ class Input extends StatefulWidget {
   }) : super(key: key);
 
   final String placeholder;
-  final String? value;
   final Function(String)? onChanged;
   final TextInputType? keyboardType;
   final String? prefixText;
@@ -69,13 +67,12 @@ class _InputState extends State<Input> {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     InputTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
-    if (widget.value != null) _controller.value = TextEditingValue(text: widget.value!);
 
     return TextField(
       keyboardType: widget.keyboardType,
       inputFormatters: widget.acceptInputFormatters ? [PhoneTextFormatter()] : null,
-      controller: widget.controller, // != null ? widget.controller : _controller,
-      style: TextStyle(color: theme.color, fontSize: widget.fontSize, fontWeight: FontWeight.w400),
+      controller: widget.controller,
+      style: TextStyle(color: theme.color, fontSize: widget.fontSize, fontWeight: FontWeight.w400, height: 1.29),
       textAlignVertical: TextAlignVertical.center,
       onChanged: (value) {
         if (widget.onChanged != null) widget.onChanged!(value);
@@ -83,7 +80,7 @@ class _InputState extends State<Input> {
       },
       decoration: InputDecoration(
         isCollapsed: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         filled: true,
         fillColor: theme.background,
         hintText: widget.placeholder,
@@ -91,6 +88,7 @@ class _InputState extends State<Input> {
           color: theme.placeholder,
           fontSize: widget.fontSize,
           fontWeight: FontWeight.w400,
+          height: 1.29,
         ),
         border: InputBorder.none,
         enabledBorder: OutlineInputBorder(
@@ -116,7 +114,12 @@ class _InputState extends State<Input> {
                 width: 24,
                 child: Text(
                   widget.prefixText!,
-                  style: TextStyle(color: theme.color, fontSize: widget.fontSize, fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                    color: theme.color,
+                    fontSize: widget.fontSize,
+                    fontWeight: FontWeight.w400,
+                    height: 1.29,
+                  ),
                 ),
               )
             : null,

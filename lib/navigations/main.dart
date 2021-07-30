@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:voda/screens/index.dart';
 import 'package:voda/config.dart';
 
+class ScreenArguments<T> {
+  ScreenArguments({this.payload});
+
+  final T? payload;
+}
+
 class MainNavigator extends StatefulWidget {
   const MainNavigator({
     Key? key,
@@ -45,6 +51,14 @@ class _MainNavigatorState extends State<MainNavigator> {
           pageBuilder: (context, animation, secondaryAnimation) {
             switch (settings.name) {
               case '/':
+              case '/auth':
+                return AuthScreen();
+              case '/auth/second':
+                ScreenArguments<String> args = settings.arguments as ScreenArguments<String>;
+                return AuthSecondScreen(phone: args.payload != null ? args.payload! : '');
+              case '/auth/properties':
+                return AuthPropertiesScreen();
+              case '/main':
                 return MainStackScreen(tabIndex: widget.tabIndex, tabCount: 4);
               case '/history/details':
                 int id = settings.arguments as int;
@@ -67,6 +81,10 @@ class MainNavigatorObserver extends NavigatorObserver {
   final Function({bool withBottomBar, String? newRoute, String? prevRoute}) onNavigation;
 
   List<String> routesWithoutBottomBar = [
+    '/',
+    '/auth',
+    '/auth/second',
+    '/auth/properties',
     '/notifications',
     '/history/details',
     '/catalog/card',

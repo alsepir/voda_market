@@ -99,6 +99,10 @@ class ProfileScreen extends StatelessWidget {
                 type: ButtonType.exit,
                 onPress: () {
                   Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/auth',
+                    (Route<dynamic> route) => false,
+                  );
                 },
               ),
             ),
@@ -109,6 +113,7 @@ class ProfileScreen extends StatelessWidget {
 
     return showDialog(
         context: context,
+        routeSettings: RouteSettings(name: '/profile/exit'),
         builder: (BuildContext context) {
           return dialog;
         });

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:voda/main.dart';
-import 'package:voda/providers/theme.dart';
+import 'package:voda/navigations/main.dart';
+import 'package:voda/providers/index.dart';
 import 'package:voda/components/index.dart';
 import 'package:voda/theme.dart';
+import 'package:flutter/scheduler.dart';
 
 class AuthScreenTheme {
   AuthScreenTheme.light()
@@ -21,7 +22,10 @@ class AuthScreenTheme {
 }
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({Key? key, this.withAppBar = false}) : super(key: key);
+
+  final bool withAppBar;
+
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -29,6 +33,14 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   TextEditingController _phoneController = TextEditingController();
   bool isButtonActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      // Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
+    });
+  }
 
   @override
   void dispose() {
@@ -64,16 +76,18 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Авторизация'),
-          leading: IconButton(
-            icon: CustomIcon(
-              CustomIcons.caretLeft,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              // Navigator.of(context).pushNamed('/notifications');
-            },
-          ),
+          title: widget.withAppBar ? Text('Авторизация') : null,
+          leading: widget.withAppBar
+              ? IconButton(
+                  icon: CustomIcon(
+                    CustomIcons.caretLeft,
+                    color: Theme.of(context).appBarTheme.iconTheme?.color,
+                  ),
+                  onPressed: () {
+                    // Navigator.of(context).pushNamed('/notifications');
+                  },
+                )
+              : null,
         ),
         body: CustomScrollView(
           slivers: [
@@ -130,6 +144,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       type: ButtonType.primary,
                       margin: EdgeInsets.only(bottom: 12),
                       onPress: () {
+                        ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+                        profileProvider.authPhone = _phoneController.value.text;
+
                         Navigator.of(context).pushNamed(
                           '/auth/second',
                           arguments: ScreenArguments<String>(payload: _phoneController.value.text),
@@ -140,7 +157,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       title: 'Продолжить без авторизации',
                       type: ButtonType.secondary,
                       margin: EdgeInsets.only(bottom: 16),
-                      onPress: () => {},
+                      onPress: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
+                      },
                     ),
                   ],
                 ),

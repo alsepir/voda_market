@@ -31,7 +31,6 @@ class AuthSecondScreen extends StatefulWidget {
 }
 
 class _AuthSecondScreenState extends State<AuthSecondScreen> {
-  TextEditingController _phoneController = TextEditingController();
   bool isButtonActive = false;
   late Timer timer;
   late int timerValue = 59;
@@ -44,7 +43,6 @@ class _AuthSecondScreenState extends State<AuthSecondScreen> {
 
   @override
   void dispose() {
-    _phoneController.dispose();
     timer.cancel();
     super.dispose();
   }
@@ -203,7 +201,9 @@ class _AuthSecondScreenState extends State<AuthSecondScreen> {
                       title: 'Войти',
                       type: ButtonType.primary,
                       margin: EdgeInsets.only(bottom: 12),
-                      onPress: () => {},
+                      onPress: () {
+                        Navigator.of(context).pushNamed('/auth/properties');
+                      },
                     ),
                     Button(
                       title: 'Сменить номер телефона',

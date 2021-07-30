@@ -35,6 +35,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
     switch (firstFragment) {
       case 'order':
+      case 'auth':
         return 0;
       case 'catalog':
         return 1;

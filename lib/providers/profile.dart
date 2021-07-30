@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:voda/models/index.dart';
 
 class ProfileProvider with ChangeNotifier {
-  ProfileProvider()
-      : data = ProfileModel(
-          'Пётр Петрович',
-          '+7 (999) 999-99-99',
-          ListItemModel(0, 'г. Чебоксары'),
-        );
+  ProfileProvider();
 
   ProfileModel? data;
+  String? authPhone;
   List<ListItemModel>? cities = [
     ListItemModel(0, 'Чебоксары'),
     ListItemModel(1, 'Новочебоксарск'),
@@ -28,6 +24,19 @@ class ProfileProvider with ChangeNotifier {
   changeCity(int? id) {
     ListItemModel city = (cities ?? []).where((element) => element.id == id).toList()[0];
     data?.city = ListItemModel(city.id, 'г. ${city.label}');
+    notifyListeners();
+  }
+
+  setData(String name, int cityId) {
+    ListItemModel? city = cities?[cityId];
+
+    if (city == null) return;
+
+    data = ProfileModel(
+      name,
+      '+7 $authPhone',
+      ListItemModel(city.id, 'г. ${city.label}'),
+    );
     notifyListeners();
   }
 }

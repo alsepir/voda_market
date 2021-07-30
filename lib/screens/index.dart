@@ -11,3 +11,4 @@ export 'orders.dart';
 export 'main.stack.dart';
 export 'auth.dart';
 export 'authSecond.dart';
+export 'authProperties.dart';

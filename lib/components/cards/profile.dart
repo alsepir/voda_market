@@ -35,10 +35,16 @@ class ProfileCardBuffer {
   int? cityId;
 }
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   ProfileCard({Key? key}) : super(key: key);
 
-  final ProfileCardBuffer buffer = ProfileCardBuffer();
+  @override
+  _ProfileCardState createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  TextEditingController _controller = TextEditingController();
+  ProfileCardBuffer buffer = ProfileCardBuffer();
 
   ProfileCardTheme getTheme(bool isDark) {
     if (isDark) return ProfileCardTheme.dark();
@@ -121,6 +127,8 @@ class ProfileCard extends StatelessWidget {
     List<ListItemModel> cities = profileProvider.cities ?? [];
     ProfileModel? data = profileProvider.data;
     ProfileCardModal? config = getModalConfig(type);
+    _controller.text = value != null ? value : '';
+
     if (config == null) return null;
 
     Modal dialog = Modal(
@@ -129,7 +137,7 @@ class ProfileCard extends StatelessWidget {
         if (config.type == ProfileCardModalType.input)
           Input(
             placeholder: config.placeholder ?? '',
-            value: value,
+            controller: _controller,
             onChanged: (value) {
               if (config.field == ProfileCardField.name) buffer.name = value;
               if (config.field == ProfileCardField.phone) buffer.phone = value;
