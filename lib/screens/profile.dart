@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:voda/providers/index.dart';
 import 'package:voda/providers/theme.dart';
 import 'package:voda/components/index.dart';
 
@@ -8,6 +9,8 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -47,12 +50,11 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   Button(
-                    title: 'Тёмная тема',
+                    title: themeProvider.mode == ThemeMode.light ? 'Тёмная тема' : 'Светлая тема',
                     type: ButtonType.secondary,
-                    leading: CustomIcons.moon,
+                    leading: themeProvider.mode == ThemeMode.light ? CustomIcons.moon : CustomIcons.sun,
                     margin: EdgeInsets.symmetric(vertical: 12),
                     onPress: () {
-                      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
                       themeProvider.toggleMode();
                     },
                   ),
@@ -97,7 +99,10 @@ class ProfileScreen extends StatelessWidget {
               child: Button(
                 title: 'Да, точно',
                 type: ButtonType.exit,
-                onPress: () {
+                onPress: () async {
+                  ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+                  await profileProvider.removeData();
+
                   Navigator.of(context, rootNavigator: true).pop();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     '/auth',

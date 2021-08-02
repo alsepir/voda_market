@@ -37,8 +37,10 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
-      // Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
+    SchedulerBinding.instance?.addPostFrameCallback((_) async {
+      ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      if (profileProvider.data != null)
+        Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
     });
   }
 

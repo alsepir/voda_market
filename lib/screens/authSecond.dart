@@ -10,15 +10,21 @@ class AuthSecondScreenTheme {
   AuthSecondScreenTheme.light()
       : this.color = AppColors.typographyPrimary,
         this.helper = AppColors.typographySecondary,
-        this.blue = AppColors.brandBlue;
+        this.blue = AppColors.brandBlue,
+        this.codeInactive = AppColors.grey7,
+        this.codeBackground = AppColors.backgroundSecondary;
   AuthSecondScreenTheme.dark()
       : this.color = AppColors.typographyDarkPrimary,
         this.helper = AppColors.typographyDarkSecondary,
-        this.blue = AppColors.brandDarkBlue;
+        this.blue = AppColors.brandDarkBlue,
+        this.codeInactive = AppColors.darkGrey7,
+        this.codeBackground = AppColors.backgroundDarkSecondary;
 
   final Color color;
   final Color helper;
   final Color blue;
+  final Color codeBackground;
+  final Color codeInactive;
 }
 
 class AuthSecondScreen extends StatefulWidget {
@@ -140,21 +146,21 @@ class _AuthSecondScreenState extends State<AuthSecondScreen> {
                                 animationType: AnimationType.fade,
                                 keyboardType: TextInputType.number,
                                 cursorHeight: 20,
-                                textStyle: TextStyle(fontSize: 34, fontWeight: FontWeight.w400),
+                                textStyle: TextStyle(fontSize: 34, fontWeight: FontWeight.w400, color: theme.color),
                                 pinTheme: PinTheme(
                                   shape: PinCodeFieldShape.underline,
                                   fieldHeight: 40,
                                   fieldWidth: 20,
                                   activeColor: Colors.transparent,
-                                  selectedColor: Colors.blue,
-                                  inactiveColor: Colors.grey,
+                                  selectedColor: theme.blue,
+                                  inactiveColor: theme.codeInactive,
                                   activeFillColor: Colors.transparent,
                                   selectedFillColor: Colors.transparent,
                                   inactiveFillColor: Colors.transparent,
                                   fieldOuterPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                                 ),
                                 animationDuration: Duration(milliseconds: 300),
-                                backgroundColor: Color(0xFFE7EDF3),
+                                backgroundColor: theme.codeBackground,
                                 enableActiveFill: true,
                                 onCompleted: (value) {
                                   print("Completed");

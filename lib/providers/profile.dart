@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:voda/models/index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ProfileProvider with ChangeNotifier {
-  ProfileProvider();
+  ProfileProvider({this.data});
 
   ProfileModel? data;
   String? authPhone;
@@ -10,6 +12,17 @@ class ProfileProvider with ChangeNotifier {
     ListItemModel(0, 'Чебоксары'),
     ListItemModel(1, 'Новочебоксарск'),
   ];
+
+  Future<void> init() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? json = prefs.getString('profile');
+
+    if (json == null) return;
+
+    Map<String, dynamic> profileMap = jsonDecode(json);
+    data = ProfileModel.fromJson(profileMap);
+  }
 
   changeName(String? value) {
     data?.name = value ?? '';
@@ -27,16 +40,20 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  setData(String name, int cityId) {
+  setData(String name, int cityId) async {
     ListItemModel? city = cities?[cityId];
 
     if (city == null) return;
+    data = ProfileModel(name, '+7 $authPhone', ListItemModel(city.id, 'г. ${city.label}'));
 
-    data = ProfileModel(
-      name,
-      '+7 $authPhone',
-      ListItemModel(city.id, 'г. ${city.label}'),
-    );
-    notifyListeners();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String json = jsonEncode(data);
+    await prefs.setString('profile', json);
+  }
+
+  Future<void> removeData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('profile');
+    data = null;
   }
 }
