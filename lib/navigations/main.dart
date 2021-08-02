@@ -3,9 +3,15 @@ import 'package:voda/screens/index.dart';
 import 'package:voda/config.dart';
 
 class ScreenArguments<T> {
-  ScreenArguments({this.payload});
+  ScreenArguments({
+    this.payload,
+    this.resetTabState = false,
+    this.canPossibleBack = false,
+  });
 
   final T? payload;
+  final bool resetTabState;
+  final bool canPossibleBack;
 }
 
 class MainNavigator extends StatefulWidget {
@@ -17,7 +23,7 @@ class MainNavigator extends StatefulWidget {
   }) : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey;
-  final Function({bool withBottomBar, String? newRoute, String? prevRoute}) onNavigation;
+  final Function({bool withBottomBar, String? newRoute, String? prevRoute, bool? resetTabState}) onNavigation;
   final int tabIndex;
 
   @override
@@ -52,17 +58,20 @@ class _MainNavigatorState extends State<MainNavigator> {
             switch (settings.name) {
               case '/':
               case '/auth':
-                return AuthScreen();
+                ScreenArguments? args = settings.arguments != null ? settings.arguments as ScreenArguments : null;
+                return AuthScreen(canPossibleBack: args?.canPossibleBack ?? false);
               case '/auth/second':
-                ScreenArguments<String> args = settings.arguments as ScreenArguments<String>;
-                return AuthSecondScreen(phone: args.payload != null ? args.payload! : '');
+                ScreenArguments<String>? args =
+                    settings.arguments != null ? settings.arguments as ScreenArguments<String> : null;
+                return AuthSecondScreen(phone: args?.payload ?? '');
               case '/auth/properties':
                 return AuthPropertiesScreen();
               case '/main':
                 return MainStackScreen(tabIndex: widget.tabIndex, tabCount: 4);
               case '/history/details':
-                int id = settings.arguments as int;
-                return HistoryDetailsScreen(historyId: id);
+                ScreenArguments<int>? args =
+                    settings.arguments != null ? settings.arguments as ScreenArguments<int> : null;
+                return HistoryDetailsScreen(historyId: args?.payload ?? 0);
               case '/notifications':
                 return NotificationsScreen();
               default:
@@ -78,7 +87,7 @@ class _MainNavigatorState extends State<MainNavigator> {
 class MainNavigatorObserver extends NavigatorObserver {
   MainNavigatorObserver(this.onNavigation);
 
-  final Function({bool withBottomBar, String? newRoute, String? prevRoute}) onNavigation;
+  final Function({bool withBottomBar, String? newRoute, String? prevRoute, bool? resetTabState}) onNavigation;
 
   List<String> routesWithoutBottomBar = [
     '/',
@@ -97,6 +106,12 @@ class MainNavigatorObserver extends NavigatorObserver {
 
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     String newRoute = route.settings.name ?? '/';
-    onNavigation(withBottomBar: !routesWithoutBottomBar.contains(newRoute), newRoute: newRoute);
+    ScreenArguments? args = route.settings.arguments != null ? route.settings.arguments as ScreenArguments : null;
+
+    onNavigation(
+      withBottomBar: !routesWithoutBottomBar.contains(newRoute),
+      newRoute: newRoute,
+      resetTabState: args?.resetTabState,
+    );
   }
 }

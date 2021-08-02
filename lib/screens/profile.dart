@@ -3,13 +3,30 @@ import 'package:provider/provider.dart';
 import 'package:voda/providers/index.dart';
 import 'package:voda/providers/theme.dart';
 import 'package:voda/components/index.dart';
+import 'package:voda/theme.dart';
+import 'package:voda/navigations/main.dart';
+
+class ProfileScreenTheme {
+  ProfileScreenTheme.light() : this.helper = AppColors.typographyTertiary;
+  ProfileScreenTheme.dark() : this.helper = AppColors.typographyDarkTertiary;
+
+  final Color helper;
+}
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  ProfileScreenTheme getTheme(bool isDark) {
+    if (isDark) return ProfileScreenTheme.dark();
+    return ProfileScreenTheme.light();
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+    bool needAuth = profileProvider.data == null;
+    ProfileScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,48 +51,83 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Container(
+      body: needAuth
+          ? Container(
               margin: EdgeInsets.symmetric(horizontal: 24),
               child: Column(
-                children: <Widget>[
+                children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        ProfileCard(),
-                      ],
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Данная вкладка недоступна неавторизованным пользователям',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, height: 1.29, color: theme.helper),
+                      ),
                     ),
                   ),
                   Button(
-                    title: themeProvider.mode == ThemeMode.light ? 'Тёмная тема' : 'Светлая тема',
-                    type: ButtonType.secondary,
-                    leading: themeProvider.mode == ThemeMode.light ? CustomIcons.moon : CustomIcons.sun,
-                    margin: EdgeInsets.symmetric(vertical: 12),
+                    title: 'Авторизоваться',
+                    type: ButtonType.primary,
+                    margin: EdgeInsets.only(bottom: 12),
                     onPress: () {
-                      themeProvider.toggleMode();
+                      Navigator.of(context).pushNamed(
+                        '/auth',
+                        arguments: ScreenArguments(canPossibleBack: true),
+                      );
                     },
                   ),
                   Button(
                     title: 'Информация о приложении',
                     type: ButtonType.secondary,
-                    margin: EdgeInsets.only(bottom: 12),
                     onPress: () => {},
                   ),
-                  Button(
-                    title: 'Выйти',
-                    type: ButtonType.exit,
-                    onPress: () => showExitDialog(context),
-                  ),
-                  SizedBox(height: 100)
+                  SizedBox(height: 100),
                 ],
               ),
+            )
+          : CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            children: [
+                              ProfileCard(),
+                            ],
+                          ),
+                        ),
+                        Button(
+                          title: themeProvider.mode == ThemeMode.light ? 'Тёмная тема' : 'Светлая тема',
+                          type: ButtonType.secondary,
+                          leading: themeProvider.mode == ThemeMode.light ? CustomIcons.moon : CustomIcons.sun,
+                          margin: EdgeInsets.symmetric(vertical: 12),
+                          onPress: () {
+                            themeProvider.toggleMode();
+                          },
+                        ),
+                        Button(
+                          title: 'Информация о приложении',
+                          type: ButtonType.secondary,
+                          margin: EdgeInsets.only(bottom: 12),
+                          onPress: () => {},
+                        ),
+                        Button(
+                          title: 'Выйти',
+                          type: ButtonType.exit,
+                          onPress: () => showExitDialog(context),
+                        ),
+                        SizedBox(height: 100)
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -107,6 +159,7 @@ class ProfileScreen extends StatelessWidget {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     '/auth',
                     (Route<dynamic> route) => false,
+                    arguments: ScreenArguments(resetTabState: true),
                   );
                 },
               ),

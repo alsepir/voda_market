@@ -29,13 +29,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.dispose();
   }
 
-  int parseTabIndex(String route, int current) {
+  int parseTabIndex(String route, int current, bool reset) {
+    if (reset) return 0;
+
     List<String> routeFragments = route.split('/');
     String firstFragment = routeFragments[1];
 
     switch (firstFragment) {
       case 'order':
-      case 'auth':
         return 0;
       case 'catalog':
         return 1;
@@ -48,7 +49,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     }
   }
 
-  void onNavigation({bool withBottomBar = true, String? newRoute, String? prevRoute}) {
+  void onNavigation({bool withBottomBar = true, String? newRoute, String? prevRoute, bool? resetTabState}) {
     if (withBottomBar)
       _hide.forward();
     else
@@ -57,11 +58,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     int newIndex = currentIndex;
 
     if (newRoute != null) {
-      newIndex = parseTabIndex(newRoute, currentIndex);
+      newIndex = parseTabIndex(newRoute, currentIndex, resetTabState ?? false);
     }
 
     if (prevRoute != null) {
-      newIndex = parseTabIndex(prevRoute, currentIndex);
+      newIndex = parseTabIndex(prevRoute, currentIndex, resetTabState ?? false);
     }
 
     if (newIndex != currentIndex) {

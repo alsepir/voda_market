@@ -102,7 +102,8 @@ class CatalogScreen extends StatelessWidget {
                             margin: EdgeInsets.only(bottom: 8),
                             child: Row(
                               children: [
-                                if (index == 0) ...[SizedBox(width: 24), ChipsBadge(amount: 1), SizedBox(width: 12)],
+                                // if (index == 0) ...[SizedBox(width: 24), ChipsBadge(amount: 1), SizedBox(width: 12)],
+                                if (index == 0) SizedBox(width: 24),
                                 Chips(item: filters[index]),
                                 SizedBox(width: index == filters.length - 1 ? 24 : 12),
                               ],

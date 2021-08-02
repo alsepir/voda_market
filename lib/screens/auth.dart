@@ -22,9 +22,9 @@ class AuthScreenTheme {
 }
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key, this.withAppBar = false}) : super(key: key);
+  const AuthScreen({Key? key, this.canPossibleBack = false}) : super(key: key);
 
-  final bool withAppBar;
+  final bool canPossibleBack;
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -78,15 +78,16 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: widget.withAppBar ? Text('Авторизация') : null,
-          leading: widget.withAppBar
+          automaticallyImplyLeading: false,
+          title: widget.canPossibleBack ? Text('Авторизация') : null,
+          leading: widget.canPossibleBack
               ? IconButton(
                   icon: CustomIcon(
                     CustomIcons.caretLeft,
                     color: Theme.of(context).appBarTheme.iconTheme?.color,
                   ),
                   onPressed: () {
-                    // Navigator.of(context).pushNamed('/notifications');
+                    Navigator.of(context).pop();
                   },
                 )
               : null,
