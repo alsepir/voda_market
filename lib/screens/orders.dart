@@ -31,7 +31,9 @@ class OrdersScreen extends StatelessWidget {
               CustomIcons.shoppingCart,
               color: Theme.of(context).appBarTheme.iconTheme?.color,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/shoppingcart');
+            },
           ),
         ],
       ),

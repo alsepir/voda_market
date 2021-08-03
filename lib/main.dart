@@ -51,6 +51,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HistoryProvider()),
         ChangeNotifierProvider(create: (context) => OrdersProvider()),
         ChangeNotifierProvider(create: (context) => CatalogProvider()),
+        ChangeNotifierProvider(create: (context) => ShoppingCartProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, theme, child) {

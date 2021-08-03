@@ -24,10 +24,14 @@ class CatalogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     CatalogProvider catalogProvider = Provider.of<CatalogProvider>(context);
+    ShoppingCartProvider shoppingCartProvider = Provider.of<ShoppingCartProvider>(context);
+    NotificationsProvider notificationsProvider = Provider.of<NotificationsProvider>(context);
     List<CatalogModel> catalog = catalogProvider.data ?? [];
     List<CatalogFilterModel> filters = catalogProvider.filters ?? [];
     List<CatalogAdvertisingModel> advertising = catalogProvider.advertising ?? [];
     CatalogScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
+    int quantityInCart = shoppingCartProvider.cart.length;
+    int? notificationsQuantity = notificationsProvider.data?.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +40,9 @@ class CatalogScreen extends StatelessWidget {
         leading: IconButton(
           icon: CustomIcon(
             CustomIcons.notification,
+            withBadge: true,
+            badgeValue: notificationsQuantity,
+            badgeType: CustomIconBadge.red,
             color: Theme.of(context).appBarTheme.iconTheme?.color,
           ),
           onPressed: () {
@@ -46,9 +53,13 @@ class CatalogScreen extends StatelessWidget {
           IconButton(
             icon: CustomIcon(
               CustomIcons.shoppingCart,
+              withBadge: quantityInCart > 0,
+              badgeValue: quantityInCart,
               color: Theme.of(context).appBarTheme.iconTheme?.color,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/shoppingcart');
+            },
           ),
         ],
       ),
@@ -120,21 +131,25 @@ class CatalogScreen extends StatelessWidget {
           cacheExtent: 3000,
           itemCount: catalog.length,
           itemBuilder: (BuildContext context, int index) {
-            if (index == 0) return SizedBox(height: 16);
-            return CatalogCard(
-              data: catalog[index],
-              margin: EdgeInsets.fromLTRB(24, 0, 24, index == catalog.length - 1 ? 100 : 16),
-              onTap: () {
-                showModalBottomSheet<void>(
-                  context: context,
-                  routeSettings: RouteSettings(name: '/catalog/card'),
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (BuildContext context) {
-                    return CatalogBottomSheet(item: catalog[index]);
+            return Column(
+              children: [
+                if (index == 0) SizedBox(height: 16),
+                CatalogCard(
+                  data: catalog[index],
+                  margin: EdgeInsets.fromLTRB(24, 0, 24, index == catalog.length - 1 ? 100 : 16),
+                  onTap: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      routeSettings: RouteSettings(name: '/catalog/card'),
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (BuildContext context) {
+                        return CatalogBottomSheet(item: catalog[index]);
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ],
             );
           },
         ),

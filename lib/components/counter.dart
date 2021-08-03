@@ -20,10 +20,18 @@ class CounterTheme {
 }
 
 class Counter extends StatefulWidget {
-  Counter({Key? key, this.onChange, this.init}) : super(key: key);
+  Counter({
+    Key? key,
+    this.onChange,
+    this.init,
+    this.width = 160.0,
+    this.value,
+  }) : super(key: key);
 
   final Function(int)? onChange;
   final int? init;
+  final double? width;
+  final int? value;
 
   @override
   _CounterState createState() => _CounterState();
@@ -51,7 +59,7 @@ class _CounterState extends State<Counter> {
     return Stack(
       children: [
         Container(
-          width: 160,
+          width: widget.width,
           height: 44,
           decoration: BoxDecoration(
             border: Border.all(color: theme.border),
@@ -59,13 +67,16 @@ class _CounterState extends State<Counter> {
           ),
         ),
         Container(
-          width: 160,
+          width: widget.width,
           height: 44,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildButtonCount(theme, isPlus: false),
-              Text('$amount', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: theme.color)),
+              Text(
+                '${widget.value ?? amount}',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: theme.color),
+              ),
               _buildButtonCount(theme),
             ],
           ),
@@ -77,7 +88,7 @@ class _CounterState extends State<Counter> {
   Widget _buildButtonCount(CounterTheme theme, {bool isPlus = true}) {
     return InkWell(
       onTap: () {
-        int _amount = amount;
+        int _amount = widget.value ?? amount;
         if (isPlus) ++_amount;
         if (!isPlus && _amount > 0) --_amount;
         if (_amount != amount) {

@@ -5,7 +5,7 @@ class CatalogProvider with ChangeNotifier {
   CatalogProvider()
       : data = List<CatalogModel>.generate(
           100,
-          (i) => CatalogModel(i, 'Природная', 19, 'Артезианская питьевая негазированная', 120, 100,
+          (i) => CatalogModel(i, 'Природная', 19, 'Артезианская питьевая негазированная', 120, 100, 300,
               i % 2 == 0 ? 'assets/images/bottle.png' : 'assets/images/bottle_2.png'),
         ),
         filters = [

@@ -35,7 +35,17 @@ class Modal extends StatelessWidget {
     ModalTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
 
     return SimpleDialog(
-      title: title != null ? Center(child: Text(title!)) : null,
+      title: title != null
+          ? Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                title!,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: theme.title),
+              ),
+            )
+          : null,
       titlePadding: EdgeInsets.symmetric(vertical: 24),
       contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 16),
       titleTextStyle: TextStyle(

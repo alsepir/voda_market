@@ -4,7 +4,7 @@ import 'index.dart';
 import 'package:voda/providers/theme.dart';
 import 'package:voda/theme.dart';
 
-enum ButtonType { primary, secondary, price, exit }
+enum ButtonType { primary, secondary, price, exit, theme }
 
 class ButtonTheme {
   ButtonTheme(this.color, this.backgroundColor);
@@ -32,6 +32,12 @@ class ButtonTheme {
   ButtonTheme.exitDark()
       : color = AppColors.systemDarkRed,
         backgroundColor = AppColors.darkGrey6;
+  ButtonTheme.light()
+      : color = AppColors.typographyPrimary,
+        backgroundColor = AppColors.backgroundPrimary;
+  ButtonTheme.dark()
+      : color = AppColors.typographyDarkPrimary,
+        backgroundColor = AppColors.backgroundDarkPrimary;
 
   final Color color;
   final Color backgroundColor;
@@ -77,16 +83,24 @@ class Button extends StatelessWidget {
       case ButtonType.exit:
         if (isDark) return ButtonTheme.exitDark();
         return ButtonTheme.exit();
+      case ButtonType.theme:
+        if (isDark) return ButtonTheme.dark();
+        return ButtonTheme.light();
       default:
         if (isDark) return ButtonTheme(Colors.red, Colors.white);
         return ButtonTheme(Colors.red, Colors.white);
     }
   }
 
+  MaterialStateProperty<Color?>? getOverlayForLightTheme(ButtonType type, bool isDark) {
+    return type == ButtonType.theme && !isDark ? MaterialStateProperty.all(Colors.grey.withOpacity(0.2)) : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: true);
     ButtonTheme theme = getTheme(type, themeProvider.mode == ThemeMode.dark);
+    MaterialStateProperty<Color?>? _overlay = getOverlayForLightTheme(type, themeProvider.mode == ThemeMode.dark);
 
     return Container(
       height: 52,
@@ -99,6 +113,7 @@ class Button extends StatelessWidget {
             padding: MaterialStateProperty.all(padding != null ? padding : EdgeInsets.all(0)),
             backgroundColor: MaterialStateProperty.all(theme.backgroundColor),
             foregroundColor: MaterialStateProperty.all(Colors.red),
+            overlayColor: _overlay,
           ),
           child: Row(
             mainAxisAlignment: type == ButtonType.price ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,

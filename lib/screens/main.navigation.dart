@@ -95,9 +95,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         body: Stack(fit: StackFit.expand, children: [
           MainNavigator(onNavigation: onNavigation, navigatorKey: navigatorKey, tabIndex: currentIndex),
           Align(
-            alignment: Alignment(0.0, 0.96),
+            alignment: Alignment.bottomCenter,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 24),
+              margin: EdgeInsets.fromLTRB(24, 0, 24, 16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: FadeTransition(

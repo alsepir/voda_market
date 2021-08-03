@@ -74,6 +74,8 @@ class _MainNavigatorState extends State<MainNavigator> {
                 return HistoryDetailsScreen(historyId: args?.payload ?? 0);
               case '/notifications':
                 return NotificationsScreen();
+              case '/shoppingcart':
+                return ShoppingCartScreen();
               default:
                 return UnknownScreen();
             }
@@ -97,6 +99,7 @@ class MainNavigatorObserver extends NavigatorObserver {
     '/notifications',
     '/history/details',
     '/catalog/card',
+    '/shoppingcart',
   ];
 
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {

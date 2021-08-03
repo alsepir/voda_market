@@ -149,7 +149,7 @@ class _RadioButtonState extends State<RadioButton> with TickerProviderStateMixin
               ),
             ),
             if (widget.label != null) ...[
-              SizedBox(width: 12),
+              SizedBox(width: 6),
               Flexible(
                 child: Text(
                   widget.label!,

@@ -27,23 +27,35 @@ class CatalogBottomSheetTheme {
 }
 
 class CatalogBottomSheet extends StatefulWidget {
-  CatalogBottomSheet({Key? key, required this.item}) : super(key: key);
+  CatalogBottomSheet({
+    Key? key,
+    required this.item,
+    this.needPriceButton = true,
+    this.initAmount,
+    this.linkWithProvider = false,
+  }) : super(key: key);
 
   final CatalogModel item;
+  final bool needPriceButton;
+  final int? initAmount;
+  final bool linkWithProvider;
 
   @override
   _CatalogBottomSheetState createState() => _CatalogBottomSheetState();
 }
 
 class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
-  int initAmount = 1;
-  int totalPrice = 0;
+  late int initAmount;
+  late int totalPrice;
+  late int totalAmount;
   bool isDrag = false;
 
   @override
   void initState() {
     super.initState();
-    calculateTotalPrice(initAmount);
+    initAmount = widget.initAmount ?? 1;
+    totalAmount = initAmount;
+    totalPrice = totalAmount == 1 ? totalAmount * widget.item.priceForOne : totalAmount * widget.item.priceForTwo;
   }
 
   CatalogBottomSheetTheme getTheme(bool isDark) {
@@ -62,7 +74,13 @@ class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
 
     setState(() {
       totalPrice = _totalPrice;
+      totalAmount = amount;
     });
+
+    if (widget.linkWithProvider) {
+      ShoppingCartProvider shoppingCartProvider = Provider.of<ShoppingCartProvider>(context, listen: false);
+      shoppingCartProvider.changeAmount(widget.item, amount);
+    }
   }
 
   @override
@@ -71,11 +89,11 @@ class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
     CatalogBottomSheetTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
 
     return Listener(
-      onPointerDown: (event) {
-        setState(() => isDrag = true);
-      },
       onPointerUp: (event) {
         setState(() => isDrag = false);
+      },
+      onPointerMove: (event) {
+        if (event.delta.dy > 0.15 && !isDrag) setState(() => isDrag = true);
       },
       child: FractionallySizedBox(
         heightFactor: 0.7,
@@ -141,14 +159,34 @@ class _CatalogBottomSheetState extends State<CatalogBottomSheet> {
                               ],
                             ),
                             SizedBox(height: 24),
-                            Button(
-                              type: ButtonType.price,
-                              title: 'Добавить в корзину',
-                              price: totalPrice,
-                              disable: totalPrice == 0,
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              onPress: () => {},
-                            )
+                            widget.needPriceButton
+                                ? Button(
+                                    type: ButtonType.price,
+                                    title: 'Добавить в корзину',
+                                    price: totalPrice,
+                                    disable: totalPrice == 0,
+                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    onPress: () {
+                                      ShoppingCartProvider shoppingCartProvider =
+                                          Provider.of<ShoppingCartProvider>(context, listen: false);
+                                      shoppingCartProvider.addItem(widget.item, totalAmount);
+                                    },
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Итого:',
+                                        style: TextStyle(
+                                            fontSize: 17, fontWeight: FontWeight.w400, color: theme.description),
+                                      ),
+                                      Text(
+                                        '$totalPrice₽',
+                                        style: TextStyle(
+                                            fontSize: 17, fontWeight: FontWeight.w400, color: theme.description),
+                                      ),
+                                    ],
+                                  )
                           ],
                         ),
                       ),
