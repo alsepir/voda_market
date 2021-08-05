@@ -3,7 +3,6 @@ export 'button.dart';
 export 'input.dart';
 export 'modal.dart';
 export 'radio.dart';
-export 'bottomSheets/catalog.dart';
 export 'counter.dart';
 export 'chips.dart';
 export 'chipsBadge.dart';
@@ -17,3 +16,7 @@ export 'cards/catalog.dart';
 export 'cards/order.dart';
 export 'cards/shoppingCart.dart';
 export 'cards/bottlesPrice.dart';
+
+// bottomSheets
+export 'bottomSheets/catalog.dart';
+export 'bottomSheets/map.dart';

@@ -92,6 +92,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         return false;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(fit: StackFit.expand, children: [
           MainNavigator(onNavigation: onNavigation, navigatorKey: navigatorKey, tabIndex: currentIndex),
           Align(

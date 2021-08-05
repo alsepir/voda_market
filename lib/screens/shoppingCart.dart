@@ -30,7 +30,7 @@ class ShoppingCartScreen extends StatefulWidget {
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 1),
+    duration: const Duration(milliseconds: 600),
     vsync: this,
   );
   late final Animation<double> _animation = CurvedAnimation(
@@ -45,6 +45,12 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
       ShoppingCartProvider shoppingCartProvider = Provider.of<ShoppingCartProvider>(context, listen: false);
       shoppingCartProvider.reset();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 
   ShoppingCartScreenTheme getTheme(bool isDark) {
@@ -138,11 +144,15 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
               );
             },
           ),
-          FadeTransition(
-            opacity: _animation,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: _buildTotalLabel(context, theme),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: FadeTransition(
+              opacity: _animation,
+              child: SizeTransition(
+                sizeFactor: _animation,
+                axis: Axis.vertical,
+                child: _buildTotalLabel(context, theme),
+              ),
             ),
           ),
         ],
@@ -183,7 +193,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
                 width: 140,
                 title: 'Далее',
                 type: ButtonType.theme,
-                onPress: () => {print('asdas')},
+                onPress: () => Navigator.of(context).pushNamed('/map'),
               )
             ],
           ),

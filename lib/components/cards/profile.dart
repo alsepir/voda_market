@@ -63,11 +63,7 @@ class _ProfileCardState extends State<ProfileCard> {
     buffer.phone = data?.phone;
     buffer.cityId = data?.city.id;
 
-    TextStyle itemStyle = TextStyle(
-      color: theme.color,
-      fontWeight: FontWeight.w400,
-      fontSize: 17,
-    );
+    TextStyle itemStyle = TextStyle(color: theme.color, fontWeight: FontWeight.w400, fontSize: 17);
 
     return Card(
       margin: EdgeInsets.all(0),

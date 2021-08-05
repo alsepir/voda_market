@@ -35,6 +35,7 @@ class Input extends StatefulWidget {
     this.acceptInputFormatters = false,
     this.fontSize = 17,
     this.controller,
+    this.autofocus = false,
   }) : super(key: key);
 
   final String placeholder;
@@ -44,6 +45,7 @@ class Input extends StatefulWidget {
   final bool acceptInputFormatters;
   final double fontSize;
   final TextEditingController? controller;
+  final bool autofocus;
 
   @override
   _InputState createState() => _InputState();
@@ -69,6 +71,7 @@ class _InputState extends State<Input> {
     InputTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
 
     return TextField(
+      autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.acceptInputFormatters ? [PhoneTextFormatter()] : null,
       controller: widget.controller,

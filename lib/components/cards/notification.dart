@@ -43,13 +43,22 @@ class NotificationsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(data.label, style: TextStyle(color: theme.label)),
-                Text(data.date, style: TextStyle(color: theme.date)),
+                Text(
+                  data.label,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, color: theme.label),
+                ),
+                Text(
+                  data.date,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: theme.date),
+                ),
               ],
             ),
             SizedBox(height: 4),
             Row(children: [
-              Text(data.description, style: TextStyle(color: theme.description)),
+              Text(
+                data.description,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: theme.description),
+              ),
             ]),
           ],
         ),

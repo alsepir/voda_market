@@ -5,3 +5,4 @@ export 'history.dart';
 export 'catalog.dart';
 export 'orders.dart';
 export 'shoppingCart.dart';
+export 'delivery.dart';
