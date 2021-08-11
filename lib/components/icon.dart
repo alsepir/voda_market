@@ -27,6 +27,7 @@ class CustomIcons {
   static const String sun = 'sun';
   static const String trash = 'trash';
   static const String checkbox = 'checkbox';
+  static const String paperPlane = 'paperPlane';
 }
 
 enum CustomIconBadge { red, blue }

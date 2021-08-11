@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:voda/providers/index.dart';
 import 'package:voda/theme.dart';
 import 'package:voda/models/index.dart';
@@ -30,9 +32,47 @@ class MapBottomSheet extends StatefulWidget {
 }
 
 class _MapBottomSheetState extends State<MapBottomSheet> {
+  Position? _position;
+  List<DeliveryCityModel>? _suggestItems;
+
+  @override
+  void initState() {
+    super.initState();
+    getPosition();
+  }
+
   MapBottomSheetTheme getTheme(bool isDark) {
     if (isDark) return MapBottomSheetTheme.dark();
     return MapBottomSheetTheme.light();
+  }
+
+  Future<void> getPosition() async {
+    bool serviceEnabled;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (serviceEnabled) {
+      _position = await Geolocator.getCurrentPosition();
+    }
+  }
+
+  Future<void> querySuggestions(String query) async {
+    if (_position == null) return;
+
+    final cancelListening = await YandexSearch.getSuggestions(
+      address: query,
+      southWestPoint: Point(latitude: _position!.latitude - 0.25, longitude: _position!.longitude - 0.3),
+      northEastPoint: Point(latitude: _position!.latitude + 0.25, longitude: _position!.longitude + 0.3),
+      suggestType: SuggestType.geo,
+      suggestWords: true,
+      onSuggest: (List<SuggestItem> suggestItems) {
+        setState(() {
+          _suggestItems = suggestItems.asMap().entries.map((entry) {
+            return DeliveryCityModel(entry.key, entry.value.title, entry.value.subtitle);
+          }).toList();
+        });
+      },
+    );
+    await Future<dynamic>.delayed(const Duration(seconds: 3), () => cancelListening());
   }
 
   @override
@@ -40,7 +80,9 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     DeliveryProvider deliveryProvider = Provider.of<DeliveryProvider>(context);
     MapBottomSheetTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
-    List<DeliveryCityModel> cities = deliveryProvider.cities;
+    // List<DeliveryCityModel> cities = deliveryProvider.cities;
+    List<DeliveryCityModel> cities =
+        _suggestItems != null && _suggestItems!.length > 0 ? _suggestItems as List<DeliveryCityModel> : [];
 
     return GestureDetector(
       onPanDown: (details) {
@@ -79,6 +121,9 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                         child: Input(
                           placeholder: 'Куда везти?',
                           autofocus: true,
+                          onChanged: (value) {
+                            querySuggestions(value);
+                          },
                           // controller: _nameController,
                           // onChanged: onChangedName,
                         ),

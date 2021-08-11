@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:voda/components/index.dart';
 import 'package:provider/provider.dart';
 import 'package:voda/providers/index.dart';
@@ -10,15 +11,24 @@ class MapScreenTheme {
   MapScreenTheme.light()
       : value = AppColors.typographyPrimary,
         placeholder = AppColors.typographyTertiary,
-        background = AppColors.backgroundSecondary;
+        background = AppColors.backgroundSecondary,
+        position = AppColors.backgroundPrimary,
+        positionIcon = AppColors.brandBlue,
+        positionShadow = AppColors.black.withOpacity(0.25);
   MapScreenTheme.dark()
       : value = AppColors.typographyDarkPrimary,
         placeholder = AppColors.typographyDarkTertiary,
-        this.background = AppColors.darkGrey6;
+        background = AppColors.darkGrey6,
+        position = AppColors.backgroundDarkPrimary,
+        positionIcon = AppColors.brandDarkBlue,
+        positionShadow = AppColors.black.withOpacity(0.25);
 
   final Color value;
   final Color placeholder;
   final Color background;
+  final Color position;
+  final Color positionIcon;
+  final Color positionShadow;
 }
 
 class MapScreen extends StatefulWidget {
@@ -31,16 +41,84 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   YandexMapController? _controller;
   String address = '';
+  LocationPermission? _permission;
+  Placemark? _placemark;
+
+  @override
+  void initState() {
+    super.initState();
+    locationPermission();
+  }
 
   MapScreenTheme getTheme(bool isDark) {
     if (isDark) return MapScreenTheme.dark();
     return MapScreenTheme.light();
   }
 
+  Future<void> locationPermission() async {
+    _permission = await Geolocator.checkPermission();
+    if (_permission == LocationPermission.denied) {
+      _permission = await Geolocator.requestPermission();
+    }
+  }
+
+  void setCurrentLocation() async {
+    bool serviceEnabled;
+
+    if (_permission == LocationPermission.denied) {
+      await locationPermission();
+      if (_permission == LocationPermission.denied) return;
+      showUserLayer();
+    }
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (serviceEnabled) {
+      Position position = await Geolocator.getCurrentPosition();
+      Point point = Point(latitude: position.latitude, longitude: position.longitude);
+      await moveToPoint(point, 18);
+    }
+  }
+
+  Future<void> showUserLayer() async {
+    await _controller?.showUserLayer(
+      iconName: 'assets/images/map/user.png',
+      arrowName: 'assets/images/map/arrow.png',
+      accuracyCircleFillColor: Colors.transparent,
+      userArrowOrientation: false,
+    );
+  }
+
+  Future<void> moveToPoint(Point point, double zoom) async {
+    await _controller?.move(
+      point: point,
+      zoom: zoom,
+      animation: const MapAnimation(smooth: true, duration: 2.0),
+    );
+  }
+
+  Future<void> setPlacemark(Point point) async {
+    if (_placemark != null) await _controller?.removePlacemark(_placemark!);
+
+    _placemark = Placemark(
+      point: point,
+      onTap: (Placemark self, Point point) => print('Tapped me at ${point.latitude},${point.longitude}'),
+      style: const PlacemarkStyle(
+        opacity: 0.7,
+        iconName: 'assets/images/map/location.png',
+        scale: 0.7,
+      ),
+    );
+
+    await _controller?.addPlacemark(_placemark!);
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     MapScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
+    double bottomFrameHeight = address.isNotEmpty ? 146.0 : 90.0;
+    double bottomMaskGradient = bottomFrameHeight - 16.0;
+    double bottomLocationPosition = bottomFrameHeight + 26;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -71,23 +149,21 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       _controller = yandexMapController;
                     },
                     onMapRendered: () async {
-                      await _controller!.move(
-                        point: _pointCheboksary,
-                        zoom: 12,
-                        animation: const MapAnimation(smooth: true, duration: 2.0),
-                      );
+                      await moveToPoint(_pointCheboksary, 12);
+                      await showUserLayer();
                     },
-                    onMapSizeChanged: (MapSize size) => print('Map size changed to ${size.width}x${size.height}'),
-                    onMapTap: (Point point) => print('Tapped map at ${point.latitude},${point.longitude}'),
-                    onMapLongTap: (Point point) => print('Long tapped map at ${point.latitude},${point.longitude}'),
+                    onMapTap: (Point point) {
+                      print('Tapped map at ${point.latitude},${point.longitude}');
+                      setPlacemark(point);
+                    },
                   ),
                 ),
               ),
-              Container(height: 100, color: Colors.white),
+              Container(height: bottomFrameHeight, color: Colors.white),
             ],
           ),
           Positioned(
-            bottom: 84,
+            bottom: bottomMaskGradient,
             child: Container(
               height: 36,
               width: MediaQuery.of(context).size.width,
@@ -143,7 +219,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                         backgroundColor: Colors.transparent,
                         transitionAnimationController: _controller,
                         builder: (BuildContext context) {
-                          return MapBottomSheet(onSelect: (item) => {setState(() => address = item.label)});
+                          return MapBottomSheet(onSelect: (item) {
+                            setState(() => address = item.label);
+                          });
                         },
                       );
                     },
@@ -158,6 +236,38 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   ],
                   SizedBox(height: address.isNotEmpty ? 16 : 24),
                 ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: bottomLocationPosition,
+            left: 16,
+            child: Container(
+              height: 44,
+              width: 44,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: theme.position,
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.positionShadow,
+                    spreadRadius: 0,
+                    blurRadius: 6,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Material(
+                borderRadius: BorderRadius.circular(22),
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(22),
+                  onTap: () => setCurrentLocation(),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: CustomIcon(CustomIcons.paperPlane, color: theme.positionIcon),
+                  ),
+                ),
               ),
             ),
           ),
