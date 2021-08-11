@@ -78,6 +78,8 @@ class _MainNavigatorState extends State<MainNavigator> {
                 return ShoppingCartScreen();
               case '/map':
                 return MapScreen();
+              case '/address':
+                return AddressScreen();
               default:
                 return UnknownScreen();
             }
@@ -102,7 +104,8 @@ class MainNavigatorObserver extends NavigatorObserver {
     '/history/details',
     '/catalog/card',
     '/shoppingcart',
-    '/map'
+    '/map',
+    '/address'
   ];
 
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {

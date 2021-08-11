@@ -23,9 +23,10 @@ class MapBottomSheetTheme {
 }
 
 class MapBottomSheet extends StatefulWidget {
-  MapBottomSheet({Key? key, this.onSelect}) : super(key: key);
+  MapBottomSheet({Key? key, this.onSelect, this.initValue = ''}) : super(key: key);
 
   final Function(DeliveryCityModel)? onSelect;
+  final String initValue;
 
   @override
   _MapBottomSheetState createState() => _MapBottomSheetState();
@@ -34,11 +35,26 @@ class MapBottomSheet extends StatefulWidget {
 class _MapBottomSheetState extends State<MapBottomSheet> {
   Position? _position;
   List<DeliveryCityModel>? _suggestItems;
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    getPosition();
+    _controller.text = widget.initValue;
+    // getPosition();
+    initAsync();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  initAsync() async {
+    await getPosition();
+    // if (widget.initValue.isNotEmpty)
+    await querySuggestions(widget.initValue);
   }
 
   MapBottomSheetTheme getTheme(bool isDark) {
@@ -121,6 +137,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                         child: Input(
                           placeholder: 'Куда везти?',
                           autofocus: true,
+                          controller: _controller,
                           onChanged: (value) {
                             querySuggestions(value);
                           },

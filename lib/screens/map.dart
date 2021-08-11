@@ -115,6 +115,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    DeliveryProvider deliveryProvider = Provider.of<DeliveryProvider>(context, listen: false);
     MapScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
     double bottomFrameHeight = address.isNotEmpty ? 146.0 : 90.0;
     double bottomMaskGradient = bottomFrameHeight - 16.0;
@@ -219,9 +220,13 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                         backgroundColor: Colors.transparent,
                         transitionAnimationController: _controller,
                         builder: (BuildContext context) {
-                          return MapBottomSheet(onSelect: (item) {
-                            setState(() => address = item.label);
-                          });
+                          return MapBottomSheet(
+                            initValue: address,
+                            onSelect: (item) {
+                              setState(() => address = item.label);
+                              deliveryProvider.address = item.label;
+                            },
+                          );
                         },
                       );
                     },
@@ -231,7 +236,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     Button(
                       title: 'Далее',
                       type: ButtonType.primary,
-                      onPress: () {},
+                      onPress: () {
+                        Navigator.of(context).pushNamed('/address');
+                      },
                     ),
                   ],
                   SizedBox(height: address.isNotEmpty ? 16 : 24),

@@ -52,14 +52,6 @@ class Input extends StatefulWidget {
 }
 
 class _InputState extends State<Input> {
-  TextEditingController _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   InputTheme getTheme(bool isDark) {
     if (isDark) return InputTheme.dark();
     return InputTheme.light();
