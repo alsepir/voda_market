@@ -80,6 +80,8 @@ class _MainNavigatorState extends State<MainNavigator> {
                 return MapScreen();
               case '/address':
                 return AddressScreen();
+              case '/delivery':
+                return DeliveryPayScreen();
               default:
                 return UnknownScreen();
             }
@@ -105,7 +107,8 @@ class MainNavigatorObserver extends NavigatorObserver {
     '/catalog/card',
     '/shoppingcart',
     '/map',
-    '/address'
+    '/address',
+    '/delivery'
   ];
 
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {

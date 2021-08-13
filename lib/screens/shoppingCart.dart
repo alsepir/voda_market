@@ -162,6 +162,7 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
 
   Widget _buildTotalLabel(BuildContext context, ShoppingCartScreenTheme theme) {
     ShoppingCartProvider shoppingCartProvider = Provider.of<ShoppingCartProvider>(context, listen: false);
+    DeliveryProvider deliveryProvider = Provider.of<DeliveryProvider>(context, listen: false);
 
     return Container(
       margin: EdgeInsets.fromLTRB(24, 0, 24, 16),
@@ -193,7 +194,10 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
                 width: 140,
                 title: 'Далее',
                 type: ButtonType.theme,
-                onPress: () => Navigator.of(context).pushNamed('/map'),
+                onPress: () {
+                  deliveryProvider.totalPrice = shoppingCartProvider.totalPrice;
+                  Navigator.of(context).pushNamed('/map');
+                },
               )
             ],
           ),

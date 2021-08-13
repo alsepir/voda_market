@@ -63,7 +63,7 @@ class AddressScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomIcon(CustomIcons.crosshair, color: theme.icon, margin: EdgeInsets.only(right: 12)),
-                        Expanded(
+                        Flexible(
                           child: Text(
                             deliveryProvider.address,
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400, color: theme.color),
@@ -119,7 +119,9 @@ class AddressScreen extends StatelessWidget {
                     Expanded(child: Container()),
                     Button(
                       title: 'Далее',
-                      onPress: () => {},
+                      onPress: () {
+                        Navigator.of(context).pushNamed('/delivery');
+                      },
                     ),
                     SizedBox(height: 16),
                   ],

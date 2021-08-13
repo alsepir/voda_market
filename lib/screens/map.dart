@@ -14,14 +14,18 @@ class MapScreenTheme {
         background = AppColors.backgroundSecondary,
         position = AppColors.backgroundPrimary,
         positionIcon = AppColors.brandBlue,
-        positionShadow = AppColors.black.withOpacity(0.25);
+        positionShadow = AppColors.black.withOpacity(0.25),
+        color = AppColors.typographyPrimary,
+        backgroundMain = AppColors.backgroundPrimary;
   MapScreenTheme.dark()
       : value = AppColors.typographyDarkPrimary,
         placeholder = AppColors.typographyDarkTertiary,
         background = AppColors.darkGrey6,
         position = AppColors.backgroundDarkPrimary,
         positionIcon = AppColors.brandDarkBlue,
-        positionShadow = AppColors.black.withOpacity(0.25);
+        positionShadow = AppColors.black.withOpacity(0.25),
+        color = AppColors.typographyPrimary,
+        backgroundMain = AppColors.backgroundDarkPrimary;
 
   final Color value;
   final Color placeholder;
@@ -29,6 +33,8 @@ class MapScreenTheme {
   final Color position;
   final Color positionIcon;
   final Color positionShadow;
+  final Color color;
+  final Color backgroundMain;
 }
 
 class MapScreen extends StatefulWidget {
@@ -125,12 +131,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Выберите адрес доставки'),
+        title: Text('Выберите адрес доставки', style: TextStyle(color: theme.color)),
         backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: CustomIcon(
             CustomIcons.caretLeft,
-            color: Theme.of(context).appBarTheme.iconTheme?.color,
+            color: theme.color,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -188,7 +194,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.backgroundMain,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.25),

@@ -7,13 +7,19 @@ class DeliveryCityModel {
 }
 
 class DeliveryFormModel {
-  DeliveryFormModel()
-      : address = '',
-        apartment = '',
-        porch = '',
-        storey = '',
-        comment = '',
-        arriveToBuilding = false;
+  DeliveryFormModel({
+    required this.address,
+    required this.apartment,
+    this.porch = '',
+    this.storey = '',
+    this.comment = '',
+    this.arriveToBuilding = false,
+    required this.totalPrice,
+    required this.howPay,
+    this.isPayUponReceipt = false,
+    required this.timeRange,
+    required this.date,
+  });
 
   String address;
   String apartment;
@@ -21,4 +27,9 @@ class DeliveryFormModel {
   String storey;
   String comment;
   bool arriveToBuilding;
+  int totalPrice;
+  int howPay;
+  bool isPayUponReceipt;
+  List<String> timeRange;
+  String date;
 }
