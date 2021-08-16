@@ -7,11 +7,13 @@ class ScreenArguments<T> {
     this.payload,
     this.resetTabState = false,
     this.canPossibleBack = false,
+    this.fromShoppingCart = false,
   });
 
   final T? payload;
   final bool resetTabState;
   final bool canPossibleBack;
+  final bool fromShoppingCart;
 }
 
 class MainNavigator extends StatefulWidget {
@@ -59,7 +61,10 @@ class _MainNavigatorState extends State<MainNavigator> {
               case '/':
               case '/auth':
                 ScreenArguments? args = settings.arguments != null ? settings.arguments as ScreenArguments : null;
-                return AuthScreen(canPossibleBack: args?.canPossibleBack ?? false);
+                return AuthScreen(
+                  canPossibleBack: args?.canPossibleBack ?? false,
+                  fromShoppingCart: args?.fromShoppingCart ?? false,
+                );
               case '/auth/second':
                 ScreenArguments<String>? args =
                     settings.arguments != null ? settings.arguments as ScreenArguments<String> : null;

@@ -8,12 +8,11 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode get mode => _mode;
 
   void toggleMode() async {
+    // light index = 1; dark index = 2
     _mode = _mode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // light index = 1; dark index = 2
     await prefs.setInt('theme', _mode.index);
-
     notifyListeners();
   }
 }

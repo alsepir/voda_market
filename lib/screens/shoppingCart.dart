@@ -5,6 +5,7 @@ import 'package:voda/components/index.dart';
 import 'package:voda/models/index.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:voda/theme.dart';
+import 'package:voda/navigations/main.dart';
 
 class ShoppingCartScreenTheme {
   ShoppingCartScreenTheme.light()
@@ -195,8 +196,17 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
                 title: 'Далее',
                 type: ButtonType.theme,
                 onPress: () {
+                  ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
                   deliveryProvider.totalPrice = shoppingCartProvider.totalPrice;
-                  Navigator.of(context).pushNamed('/map');
+
+                  if (profileProvider.data == null) {
+                    Navigator.of(context).pushNamed(
+                      '/auth',
+                      arguments: ScreenArguments(canPossibleBack: true, fromShoppingCart: true),
+                    );
+                  } else {
+                    Navigator.of(context).pushNamed('/map');
+                  }
                 },
               )
             ],

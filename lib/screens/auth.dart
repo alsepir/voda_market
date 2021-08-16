@@ -22,9 +22,14 @@ class AuthScreenTheme {
 }
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key, this.canPossibleBack = false}) : super(key: key);
+  const AuthScreen({
+    Key? key,
+    this.canPossibleBack = false,
+    this.fromShoppingCart = false,
+  }) : super(key: key);
 
   final bool canPossibleBack;
+  final bool fromShoppingCart;
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -102,10 +107,20 @@ class _AuthScreenState extends State<AuthScreen> {
                   children: <Widget>[
                     Expanded(
                       flex: 1,
-                      child: Text(
-                        'Для входа введите\nномер телефона',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600, height: 1.21, color: theme.color),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.fromShoppingCart
+                              ? 'Для оформления заказа требуется авторизоваться. Введите номер телефона'
+                              : 'Для входа введите\nномер телефона',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: widget.fromShoppingCart ? 22 : 28,
+                            fontWeight: FontWeight.w600,
+                            height: 1.21,
+                            color: theme.color,
+                          ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 12),
@@ -156,14 +171,15 @@ class _AuthScreenState extends State<AuthScreen> {
                         );
                       },
                     ),
-                    Button(
-                      title: 'Продолжить без авторизации',
-                      type: ButtonType.secondary,
-                      margin: EdgeInsets.only(bottom: 16),
-                      onPress: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
-                      },
-                    ),
+                    if (!widget.canPossibleBack)
+                      Button(
+                        title: 'Продолжить без авторизации',
+                        type: ButtonType.secondary,
+                        margin: EdgeInsets.only(bottom: 16),
+                        onPress: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
+                        },
+                      ),
                   ],
                 ),
               ),

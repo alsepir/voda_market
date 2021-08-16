@@ -61,7 +61,7 @@ class _AuthPropertiesScreenState extends State<AuthPropertiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     ProfileProvider profileProvider = Provider.of<ProfileProvider>(context, listen: false);
     List<ListItemModel> cities = profileProvider.cities ?? [];
     AuthPropertiesScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
@@ -146,7 +146,23 @@ class _AuthPropertiesScreenState extends State<AuthPropertiesScreen> {
                       margin: EdgeInsets.only(bottom: 12),
                       onPress: () {
                         profileProvider.setData(buffer.name ?? '', buffer.cityId ?? 0);
-                        Navigator.of(context).pushNamedAndRemoveUntil('/main', (Route<dynamic> route) => false);
+
+                        bool isNotEmptyState = false;
+                        bool intoMap = false;
+                        Navigator.of(context).popUntil((route) {
+                          if (route.settings.name != null) {
+                            List<String> crumbs = route.settings.name!.split('/');
+                            if (crumbs[1] != 'auth') {
+                              intoMap = crumbs[1] == 'shoppingcart';
+                              isNotEmptyState = true;
+                              return true;
+                            }
+                          }
+                          return false;
+                        });
+
+                        if (intoMap) Navigator.of(context).pushNamed('/map');
+                        if (!isNotEmptyState) Navigator.of(context).pushNamed('/main');
                       },
                     ),
                   ],

@@ -29,6 +29,7 @@ class ProfileScreen extends StatelessWidget {
     ProfileScreenTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Профиль'),
@@ -54,39 +55,9 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: needAuth
-          ? Container(
-              margin: EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Данная вкладка недоступна неавторизованным пользователям',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400, height: 1.29, color: theme.helper),
-                      ),
-                    ),
-                  ),
-                  Button(
-                    title: 'Авторизоваться',
-                    type: ButtonType.primary,
-                    margin: EdgeInsets.only(bottom: 12),
-                    onPress: () {
-                      Navigator.of(context).pushNamed(
-                        '/auth',
-                        arguments: ScreenArguments(canPossibleBack: true),
-                      );
-                    },
-                  ),
-                  Button(
-                    title: 'Информация о приложении',
-                    type: ButtonType.secondary,
-                    onPress: () => {},
-                  ),
-                  SizedBox(height: 100),
-                ],
-              ),
+          ? NoAuth(
+              info: true,
+              margin: EdgeInsets.fromLTRB(24, 0, 24, 100),
             )
           : CustomScrollView(
               slivers: [
