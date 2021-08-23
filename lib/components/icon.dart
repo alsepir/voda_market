@@ -34,14 +34,17 @@ enum CustomIconBadge { red, blue }
 
 class CustomIconTheme {
   CustomIconTheme.light(CustomIconBadge badgeType)
-      : badge = AppColors.white,
+      : icon = AppColors.typographyPrimary,
+        badge = AppColors.white,
         badgeBackground = badgeType == CustomIconBadge.blue ? AppColors.brandBlue : AppColors.systemRed;
   CustomIconTheme.dark(CustomIconBadge badgeType)
-      : badge = AppColors.white,
+      : icon = AppColors.typographyDarkPrimary,
+        badge = AppColors.white,
         badgeBackground = badgeType == CustomIconBadge.blue ? AppColors.brandDarkBlue : AppColors.systemDarkRed;
 
   final Color badgeBackground;
   final Color badge;
+  final Color icon;
 }
 
 class CustomIcon extends StatelessWidget {
@@ -50,7 +53,7 @@ class CustomIcon extends StatelessWidget {
     Key? key,
     this.width = 24,
     this.height = 24,
-    this.color = Colors.grey,
+    this.color,
     this.margin,
     this.withBadge = false,
     this.badgeValue,
@@ -85,7 +88,7 @@ class CustomIcon extends StatelessWidget {
             'assets/icons/$assetName.svg',
             width: width,
             height: height,
-            color: color,
+            color: color ?? theme.icon,
           ),
         ),
         if (withBadge)

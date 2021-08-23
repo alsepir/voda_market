@@ -64,8 +64,23 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
       backgroundColor: theme == ThemeMode.dark ? AppColors.backgroundDarkPrimary : AppColors.backgroundPrimary,
       appBar: Header(
         title: 'Профиль',
-        leading: HeaderLeading.notification,
         theme: theme,
+        leading: HeaderLeading.notification,
+        actions: [
+          Consumer<ShoppingCartProvider>(
+            builder: (context, shoppingCart, child) {
+              int quantity = shoppingCart.cart.length;
+              return IconButton(
+                icon: CustomIcon(
+                  CustomIcons.shoppingCart,
+                  withBadge: quantity > 0,
+                  badgeValue: quantity,
+                ),
+                onPressed: () => Navigator.of(context).pushNamed('/shoppingcart'),
+              );
+            },
+          ),
+        ],
       ),
       body: needAuth
           ? NoAuth(

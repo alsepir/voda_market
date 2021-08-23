@@ -93,19 +93,7 @@ class _AuthSecondScreenState extends State<AuthSecondScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Введите код из СМС'),
-          leading: IconButton(
-            icon: CustomIcon(
-              CustomIcons.caretLeft,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              Navigator.of(context).maybePop();
-            },
-          ),
-        ),
+        appBar: Header(title: 'Введите код из СМС', leading: HeaderLeading.back),
         body: CustomScrollView(
           slivers: [
             SliverFillRemaining(

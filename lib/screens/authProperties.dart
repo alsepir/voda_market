@@ -75,19 +75,7 @@ class _AuthPropertiesScreenState extends State<AuthPropertiesScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(''),
-          leading: IconButton(
-            icon: CustomIcon(
-              CustomIcons.caretLeft,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              Navigator.of(context).maybePop();
-            },
-          ),
-        ),
+        appBar: Header(title: '', leading: HeaderLeading.back),
         body: CustomScrollView(
           slivers: [
             SliverFillRemaining(

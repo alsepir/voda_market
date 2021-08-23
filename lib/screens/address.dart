@@ -37,18 +37,9 @@ class AddressScreen extends StatelessWidget {
         if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Уточните адрес', style: Theme.of(context).appBarTheme.titleTextStyle),
-          leading: IconButton(
-            icon: CustomIcon(
-              CustomIcons.caretLeft,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              Navigator.of(context).maybePop();
-            },
-          ),
+        appBar: Header(
+          title: 'Уточните адрес',
+          leading: HeaderLeading.back,
         ),
         body: CustomScrollView(
           slivers: [

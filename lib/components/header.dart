@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:voda/providers/theme.dart';
+import 'package:voda/providers/index.dart';
 import 'package:voda/theme.dart';
 import 'package:flutter/services.dart';
 import 'package:voda/components/index.dart';
@@ -9,13 +9,13 @@ class HeaderTheme {
   HeaderTheme.light()
       : this.helper = AppColors.typographyTertiary,
         this.background = AppColors.backgroundPrimary,
-        this.icon = AppColors.brandBlue,
+        this.icon = AppColors.typographyPrimary,
         this.title = AppColors.typographyPrimary,
         this.systemOverlayStyle = SystemUiOverlayStyle.dark;
   HeaderTheme.dark()
       : this.helper = AppColors.typographyDarkTertiary,
         this.background = AppColors.backgroundDarkPrimary,
-        this.icon = AppColors.brandDarkBlue,
+        this.icon = AppColors.typographyDarkPrimary,
         this.title = AppColors.typographyDarkPrimary,
         this.systemOverlayStyle = SystemUiOverlayStyle.light;
 
@@ -26,7 +26,7 @@ class HeaderTheme {
   final Color title;
 }
 
-enum HeaderLeading { notification }
+enum HeaderLeading { notification, back }
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
   Header({
@@ -35,6 +35,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.height = 60,
     this.leading,
+    this.actions,
+    this.backgroundColor,
   })  : preferredSize = Size.fromHeight(height),
         super(key: key);
 
@@ -43,6 +45,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final Size preferredSize;
   final HeaderLeading? leading;
+  final List<Widget>? actions;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +73,10 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       backwardsCompatibility: false,
-      backgroundColor: _theme.background,
+      backgroundColor: backgroundColor ?? _theme.background,
       automaticallyImplyLeading: false,
       leading: _buildLeading(context, leading),
-      actions: [
-        IconButton(
-          icon: CustomIcon(CustomIcons.shoppingCart, color: _theme.icon),
-          onPressed: () => Navigator.of(context).pushNamed('/shoppingcart'),
-        ),
-      ],
+      actions: actions,
     );
   }
 
@@ -86,9 +85,30 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
     switch (leading) {
       case HeaderLeading.notification:
+        return Consumer<NotificationsProvider>(
+          builder: (context, notifications, child) {
+            int? quantity = notifications.data?.length;
+            return IconButton(
+              icon: CustomIcon(
+                CustomIcons.notification,
+                withBadge: true,
+                badgeValue: quantity,
+                badgeType: CustomIconBadge.red,
+                color: _theme.icon,
+              ),
+              onPressed: () => Navigator.of(context).pushNamed('/notifications'),
+            );
+          },
+        );
+      case HeaderLeading.back:
         return IconButton(
-          icon: CustomIcon(CustomIcons.notification, color: _theme.icon),
-          onPressed: () => Navigator.of(context).pushNamed('/notifications'),
+          icon: CustomIcon(
+            CustomIcons.caretLeft,
+            color: _theme.icon,
+          ),
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
         );
       default:
         return null;

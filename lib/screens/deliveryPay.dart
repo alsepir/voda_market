@@ -58,19 +58,7 @@ class _DeliveryPayScreenState extends State<DeliveryPayScreen> {
         if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('', style: Theme.of(context).appBarTheme.titleTextStyle),
-          leading: IconButton(
-            icon: CustomIcon(
-              CustomIcons.caretLeft,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              Navigator.of(context).maybePop();
-            },
-          ),
-        ),
+        appBar: Header(title: '', leading: HeaderLeading.back),
         body: CustomScrollView(
           slivers: [
             SliverFillRemaining(

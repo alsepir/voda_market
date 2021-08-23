@@ -13,24 +13,12 @@ class NotificationsScreen extends StatelessWidget {
     List<NotificationModel> notifications = notificationsProvider.data ?? [];
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Уведомления', style: Theme.of(context).appBarTheme.titleTextStyle),
-        leading: IconButton(
-          icon: CustomIcon(
-            CustomIcons.caretLeft,
-            color: Theme.of(context).appBarTheme.iconTheme?.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).maybePop();
-          },
-        ),
+      appBar: Header(
+        title: 'Уведомления',
+        leading: HeaderLeading.back,
         actions: [
           IconButton(
-            icon: CustomIcon(
-              CustomIcons.gear,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
+            icon: CustomIcon(CustomIcons.gear),
             onPressed: () {},
           ),
         ],

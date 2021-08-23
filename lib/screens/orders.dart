@@ -13,26 +13,21 @@ class OrdersScreen extends StatelessWidget {
     List<OrderModel> orders = ordersProvider.data ?? [];
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Активные заказы', style: Theme.of(context).appBarTheme.titleTextStyle),
-        leading: IconButton(
-          icon: CustomIcon(
-            CustomIcons.notification,
-            color: Theme.of(context).appBarTheme.iconTheme?.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/notifications');
-          },
-        ),
+      appBar: Header(
+        title: 'Активные заказы',
+        leading: HeaderLeading.notification,
         actions: [
-          IconButton(
-            icon: CustomIcon(
-              CustomIcons.shoppingCart,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
-            ),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/shoppingcart');
+          Consumer<ShoppingCartProvider>(
+            builder: (context, shoppingCart, child) {
+              int quantity = shoppingCart.cart.length;
+              return IconButton(
+                icon: CustomIcon(
+                  CustomIcons.shoppingCart,
+                  withBadge: quantity > 0,
+                  badgeValue: quantity,
+                ),
+                onPressed: () => Navigator.of(context).pushNamed('/shoppingcart'),
+              );
             },
           ),
         ],

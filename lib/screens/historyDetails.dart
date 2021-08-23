@@ -44,18 +44,9 @@ class HistoryDetailsScreen extends StatelessWidget {
     HistoryModel history = (historyProvider.data ?? []).firstWhere((element) => element.id == historyId);
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('#$historyId', style: Theme.of(context).appBarTheme.titleTextStyle),
-        leading: IconButton(
-          icon: CustomIcon(
-            CustomIcons.caretLeft,
-            color: Theme.of(context).appBarTheme.iconTheme?.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).maybePop();
-          },
-        ),
+      appBar: Header(
+        title: '#$historyId',
+        leading: HeaderLeading.back,
       ),
       body: CustomScrollView(
         slivers: [

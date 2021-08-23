@@ -72,25 +72,15 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> with TickerProv
       _controller.reverse();
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Корзина', style: Theme.of(context).appBarTheme.titleTextStyle),
-        leading: IconButton(
-          icon: CustomIcon(
-            CustomIcons.caretLeft,
-            color: Theme.of(context).appBarTheme.iconTheme?.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+      appBar: Header(
+        title: 'Корзина',
+        leading: HeaderLeading.back,
         actions: [
           IconButton(
             icon: CustomIcon(
               CustomIcons.trash,
               withBadge: shoppingCartProvider.highlightedItems > 0,
               badgeValue: shoppingCartProvider.highlightedItems,
-              color: Theme.of(context).appBarTheme.iconTheme?.color,
             ),
             onPressed: () => showClearCartDialog(context),
           ),

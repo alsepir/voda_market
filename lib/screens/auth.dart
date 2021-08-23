@@ -81,21 +81,9 @@ class _AuthScreenState extends State<AuthScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: widget.canPossibleBack ? Text('Авторизация') : null,
-          leading: widget.canPossibleBack
-              ? IconButton(
-                  icon: CustomIcon(
-                    CustomIcons.caretLeft,
-                    color: Theme.of(context).appBarTheme.iconTheme?.color,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              : null,
+        appBar: Header(
+          title: widget.canPossibleBack ? 'Авторизация' : null,
+          leading: widget.canPossibleBack ? HeaderLeading.back : null,
         ),
         body: CustomScrollView(
           slivers: [

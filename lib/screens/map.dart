@@ -129,19 +129,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Выберите адрес доставки', style: TextStyle(color: theme.color)),
+      appBar: Header(
+        title: 'Выберите адрес доставки',
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: CustomIcon(
-            CustomIcons.caretLeft,
-            color: theme.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: HeaderLeading.back,
       ),
       extendBodyBehindAppBar: true,
       body: Stack(
