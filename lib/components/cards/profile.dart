@@ -12,12 +12,14 @@ class ProfileCardTheme {
         leading = AppColors.brandBlue,
         tail = AppColors.grey5,
         border = AppColors.border,
+        divider = AppColors.divider,
         background = AppColors.backgroundPrimary;
   ProfileCardTheme.dark()
       : color = AppColors.typographyDarkPrimary,
         leading = AppColors.brandDarkBlue,
         tail = AppColors.darkGrey5,
         border = AppColors.borderDark,
+        divider = AppColors.dividerDark,
         background = AppColors.backgroundDarkSecondary;
 
   final Color color;
@@ -25,6 +27,7 @@ class ProfileCardTheme {
   final Color tail;
   final Color background;
   final Color border;
+  final Color divider;
 }
 
 class ProfileCardBuffer {
@@ -36,7 +39,9 @@ class ProfileCardBuffer {
 }
 
 class ProfileCard extends StatefulWidget {
-  ProfileCard({Key? key}) : super(key: key);
+  ProfileCard({Key? key, this.theme}) : super(key: key);
+
+  final ThemeMode? theme;
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
@@ -46,58 +51,57 @@ class _ProfileCardState extends State<ProfileCard> {
   TextEditingController _controller = TextEditingController();
   ProfileCardBuffer buffer = ProfileCardBuffer();
 
-  ProfileCardTheme getTheme(bool isDark) {
-    if (isDark) return ProfileCardTheme.dark();
-    return ProfileCardTheme.light();
-  }
-
   @override
   Widget build(BuildContext context) {
-    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    ProfileCardTheme _theme;
+    if (widget.theme != null) {
+      _theme = widget.theme == ThemeMode.dark ? ProfileCardTheme.dark() : ProfileCardTheme.light();
+    } else {
+      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+      _theme = themeProvider.mode == ThemeMode.dark ? ProfileCardTheme.dark() : ProfileCardTheme.light();
+    }
 
+    ProfileProvider profileProvider = Provider.of<ProfileProvider>(context);
     ProfileModel? data = profileProvider.data;
-    ProfileCardTheme theme = getTheme(themeProvider.mode == ThemeMode.dark);
+    TextStyle itemStyle = TextStyle(color: _theme.color, fontWeight: FontWeight.w400, fontSize: 17);
 
     buffer.name = data?.name;
     buffer.phone = data?.phone;
     buffer.cityId = data?.city.id;
 
-    TextStyle itemStyle = TextStyle(color: theme.color, fontWeight: FontWeight.w400, fontSize: 17);
-
     return Card(
       margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(
-        side: new BorderSide(color: theme.border, width: 1.0),
+        side: new BorderSide(color: _theme.border, width: 1.0),
         borderRadius: BorderRadius.circular(24.0),
       ),
-      color: theme.background,
+      color: _theme.background,
       shadowColor: AppColors.shadow,
       elevation: 16,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            leading: CustomIcon(CustomIcons.profile, color: theme.leading),
+            leading: CustomIcon(CustomIcons.profile, color: _theme.leading),
             minLeadingWidth: 12,
             title: Text(data?.name ?? '', style: itemStyle),
-            trailing: CustomIcon(CustomIcons.caretRight, color: theme.tail),
+            trailing: CustomIcon(CustomIcons.caretRight, color: _theme.tail),
             onTap: () => showEditDialog(context, ProfileCardField.name, value: data?.name),
           ),
-          Divider(height: 0.5, thickness: 0.5, indent: 16, endIndent: 16),
+          Divider(height: 0.5, thickness: 0.5, indent: 16, endIndent: 16, color: _theme.divider),
           ListTile(
-            leading: CustomIcon(CustomIcons.phone, color: theme.leading),
+            leading: CustomIcon(CustomIcons.phone, color: _theme.leading),
             minLeadingWidth: 12,
             title: Text(data?.phone ?? '', style: itemStyle),
-            trailing: CustomIcon(CustomIcons.caretRight, color: theme.tail),
+            trailing: CustomIcon(CustomIcons.caretRight, color: _theme.tail),
             onTap: () => showEditDialog(context, ProfileCardField.phone, value: data?.phone),
           ),
-          Divider(height: 0.5, thickness: 0.5, indent: 16, endIndent: 16),
+          Divider(height: 0.5, thickness: 0.5, indent: 16, endIndent: 16, color: _theme.divider),
           ListTile(
-            leading: CustomIcon(CustomIcons.destination, color: theme.leading),
+            leading: CustomIcon(CustomIcons.destination, color: _theme.leading),
             minLeadingWidth: 12,
             title: Text(data?.city.label ?? '', style: itemStyle),
-            trailing: CustomIcon(CustomIcons.caretRight, color: theme.tail),
+            trailing: CustomIcon(CustomIcons.caretRight, color: _theme.tail),
             onTap: () => showEditDialog(context, ProfileCardField.city),
           ),
         ],

@@ -147,14 +147,14 @@ class _AuthPropertiesScreenState extends State<AuthPropertiesScreen> {
                       onPress: () {
                         profileProvider.setData(buffer.name ?? '', buffer.cityId ?? 0);
 
-                        bool isNotEmptyState = false;
                         bool intoMap = false;
+                        bool intoMain = false;
                         Navigator.of(context).popUntil((route) {
                           if (route.settings.name != null) {
                             List<String> crumbs = route.settings.name!.split('/');
                             if (crumbs[1] != 'auth') {
                               intoMap = crumbs[1] == 'shoppingcart';
-                              isNotEmptyState = true;
+                              intoMain = crumbs[1].isEmpty;
                               return true;
                             }
                           }
@@ -162,7 +162,7 @@ class _AuthPropertiesScreenState extends State<AuthPropertiesScreen> {
                         });
 
                         if (intoMap) Navigator.of(context).pushNamed('/map');
-                        if (!isNotEmptyState) Navigator.of(context).pushNamed('/main');
+                        if (intoMain) Navigator.of(context).pushNamed('/main');
                       },
                     ),
                   ],

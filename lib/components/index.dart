@@ -8,6 +8,7 @@ export 'chipsBadge.dart';
 export 'checkbox.dart';
 export 'slider.dart';
 export 'noAuth.dart';
+export 'header.dart';
 
 // cards
 export 'cards/notification.dart';

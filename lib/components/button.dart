@@ -56,6 +56,7 @@ class Button extends StatelessWidget {
     this.padding,
     this.price,
     this.disable = false,
+    this.theme,
   }) : super(key: key);
 
   final String? title;
@@ -68,8 +69,9 @@ class Button extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final int? price;
   final bool disable;
+  final ThemeMode? theme;
 
-  ButtonTheme getTheme(ButtonType type, bool isDark) {
+  static ButtonTheme getTheme(ButtonType type, bool isDark, bool disable) {
     switch (type) {
       case ButtonType.primary:
         if (isDark) return ButtonTheme.primaryDark(disable: disable);
@@ -98,10 +100,15 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: true);
-    ButtonTheme theme = getTheme(type, themeProvider.mode == ThemeMode.dark);
-    MaterialStateProperty<Color?>? _overlay = getOverlayForLightTheme(type, themeProvider.mode == ThemeMode.dark);
+    ButtonTheme _theme;
+    if (theme != null) {
+      _theme = getTheme(type, theme == ThemeMode.dark, disable);
+    } else {
+      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+      _theme = getTheme(type, themeProvider.mode == ThemeMode.dark, disable);
+    }
 
+    // MaterialStateProperty<Color?>? _overlay = getOverlayForLightTheme(type, themeProvider.mode == ThemeMode.dark);
     return Container(
       height: 52,
       width: width != null ? width : null,
@@ -111,9 +118,9 @@ class Button extends StatelessWidget {
         child: ElevatedButton(
           style: ButtonStyle(
             padding: MaterialStateProperty.all(padding != null ? padding : EdgeInsets.all(0)),
-            backgroundColor: MaterialStateProperty.all(theme.backgroundColor),
+            backgroundColor: MaterialStateProperty.all(_theme.backgroundColor),
             foregroundColor: MaterialStateProperty.all(Colors.red),
-            overlayColor: _overlay,
+            // overlayColor: _overlay,
           ),
           child: Row(
             mainAxisAlignment: type == ButtonType.price ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
@@ -123,7 +130,7 @@ class Button extends StatelessWidget {
                   margin: title != null ? EdgeInsets.only(right: 8) : null,
                   child: CustomIcon(
                     leading!,
-                    color: theme.color,
+                    color: _theme.color,
                     width: iconSize != null ? iconSize! : 24,
                     height: iconSize != null ? iconSize! : 24,
                   ),
@@ -131,7 +138,7 @@ class Button extends StatelessWidget {
               if (title != null)
                 Text(
                   title!,
-                  style: TextStyle(color: theme.color, fontWeight: FontWeight.w400, fontSize: 17),
+                  style: TextStyle(color: _theme.color, fontWeight: FontWeight.w400, fontSize: 17),
                 ),
               if (price != null)
                 Container(
@@ -139,12 +146,12 @@ class Button extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 6),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    border: Border.all(color: theme.color),
+                    border: Border.all(color: _theme.color),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     '$price₽',
-                    style: TextStyle(color: theme.color, fontWeight: FontWeight.w400, fontSize: 15),
+                    style: TextStyle(color: _theme.color, fontWeight: FontWeight.w400, fontSize: 15),
                   ),
                 )
             ],
