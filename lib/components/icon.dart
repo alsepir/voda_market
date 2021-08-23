@@ -58,6 +58,7 @@ class CustomIcon extends StatelessWidget {
     this.withBadge = false,
     this.badgeValue,
     this.badgeType = CustomIconBadge.blue,
+    this.theme,
   }) : super(key: key);
 
   final String assetName;
@@ -68,6 +69,7 @@ class CustomIcon extends StatelessWidget {
   final bool withBadge;
   final int? badgeValue;
   final CustomIconBadge badgeType;
+  final ThemeMode? theme;
 
   CustomIconTheme getTheme(bool isDark, CustomIconBadge badgeType) {
     if (isDark) return CustomIconTheme.dark(badgeType);
@@ -76,8 +78,14 @@ class CustomIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    CustomIconTheme theme = getTheme(themeProvider.mode == ThemeMode.dark, badgeType);
+    CustomIconTheme _theme;
+    if (theme != null) {
+      _theme = getTheme(theme == ThemeMode.dark, badgeType);
+    } else {
+      ThemeProvider themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+      _theme = getTheme(themeProvider.mode == ThemeMode.dark, badgeType);
+    }
+
     int? _badgeValue = badgeValue != null && badgeValue! > 99 ? 99 : badgeValue;
 
     return Stack(
@@ -88,7 +96,7 @@ class CustomIcon extends StatelessWidget {
             'assets/icons/$assetName.svg',
             width: width,
             height: height,
-            color: color ?? theme.icon,
+            color: color ?? _theme.icon,
           ),
         ),
         if (withBadge)
@@ -99,14 +107,14 @@ class CustomIcon extends StatelessWidget {
               width: 16,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: theme.badgeBackground,
+                color: _theme.badgeBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 '${_badgeValue ?? ''}',
                 textAlign: TextAlign.center,
                 maxLines: 1,
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: theme.badge),
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w400, color: _theme.badge),
               ),
             ),
           ),

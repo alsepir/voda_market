@@ -75,14 +75,12 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
       backwardsCompatibility: false,
       backgroundColor: backgroundColor ?? _theme.background,
       automaticallyImplyLeading: false,
-      leading: _buildLeading(context, leading),
+      leading: _buildLeading(context, leading, _theme),
       actions: actions,
     );
   }
 
-  Widget? _buildLeading(BuildContext context, HeaderLeading? leading) {
-    HeaderTheme _theme = theme == ThemeMode.dark ? HeaderTheme.dark() : HeaderTheme.light();
-
+  Widget? _buildLeading(BuildContext context, HeaderLeading? leading, HeaderTheme theme) {
     switch (leading) {
       case HeaderLeading.notification:
         return Consumer<NotificationsProvider>(
@@ -94,7 +92,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
                 withBadge: true,
                 badgeValue: quantity,
                 badgeType: CustomIconBadge.red,
-                color: _theme.icon,
+                color: theme.icon,
               ),
               onPressed: () => Navigator.of(context).pushNamed('/notifications'),
             );
@@ -104,7 +102,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
         return IconButton(
           icon: CustomIcon(
             CustomIcons.caretLeft,
-            color: _theme.icon,
+            color: theme.icon,
           ),
           onPressed: () {
             Navigator.of(context).maybePop();

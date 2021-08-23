@@ -75,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> with TickerProviderStateM
                   CustomIcons.shoppingCart,
                   withBadge: quantity > 0,
                   badgeValue: quantity,
+                  theme: theme,
                 ),
                 onPressed: () => Navigator.of(context).pushNamed('/shoppingcart'),
               );
