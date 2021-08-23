@@ -64,7 +64,6 @@ class App extends StatelessWidget {
           );
         },
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
