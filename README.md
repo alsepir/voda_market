@@ -1,16 +1,23 @@
-# voda
+# Вода
+#### _Мобильное приложение по доставке воды_
 
-A new Flutter project.
+Ключевые технологии
 
-## Getting Started
+- Dart/Flutter
+- provider/yandex_mapkit/shared_preferences
 
-This project is a starting point for a Flutter application.
+#### _Описание_
 
-A few resources to get you started if this is your first Flutter project:
+Ознакомление с окружением Flutter для разработки мобильных приложений.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+<p style="text-align: center">
+  <img src="https://github.com/alsepir/voda_market/blob/preview/preview/preview-1.gif" alt="drawing" width="200"/>
+  <img src="https://github.com/alsepir/voda_market/blob/preview/preview/preview-2.gif" alt="drawing" width="200"/>
+  <img src="https://github.com/alsepir/voda_market/blob/preview/preview/preview-3.gif" alt="drawing" width="200"/>
+</p>
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### _Сборки_
+
+[app-arm64-v8a-release](https://github.com/alsepir/voda_market/blob/preview/apk/app-arm64-v8a-release.apk)
+[app-armeabi-v7a-release](https://github.com/alsepir/voda_market/blob/preview/apk/app-armeabi-v7a-release.apk)
+[app-x86_64-release](https://github.com/alsepir/voda_market/blob/preview/apk/app-x86_64-release.apk)
